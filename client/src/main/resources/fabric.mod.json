@@ -3,7 +3,7 @@
   "id": "radbroadcast",
   "version": "${version}",
   "name": "RadBroadcast Client",
-  "description": "空间站搜打撤沉浸广播客户端：接收 RadBroadcast 服务端指令，立即播放音频直链（MP3，独立于游戏声音通道）。",
+  "description": "广播音频客户端：接收 RadBroadcast 服务端指令，立即播放音频直链（MP3，独立于游戏声音通道）。",
   "authors": ["KeranTechnology"],
   "license": "MIT",
   "environment": "client",

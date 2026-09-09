@@ -4,7 +4,7 @@ main: com.keran.radbroadcast.RadBroadcast
 api-version: '1.20'
 prefix: Rad
 authors: [KeranTechnology]
-description: 空间站搜打撤沉浸音频广播：按区域/指定玩家/全员向 1.20.1 Fabric 客户端广播音频直链
+description: 音频广播插件：按区域/指定玩家/全员向装有配套客户端 Mod 的玩家广播音频直链
 softdepend:
   - PlaceholderAPI
   - Multiverse-Core
