@@ -1,0 +1,19 @@
+name: RadBroadcast
+version: '1.0.0'
+main: com.keran.radbroadcast.RadBroadcast
+api-version: '1.20'
+prefix: Rad
+authors: [KeranTechnology]
+description: 空间站搜打撤沉浸音频广播：按区域/指定玩家/全员向 1.20.1 Fabric 客户端广播音频直链
+softdepend:
+  - PlaceholderAPI
+  - Multiverse-Core
+commands:
+  rad:
+    description: 广播音频 (需对应 Fabric 客户端 Mod: radbroadcast)
+    usage: /rad play <x> <y> <z> <世界> <范围> <音频直链> | /rad play <玩家|all> <音频直链>
+    permission: radbroadcast.use
+permissions:
+  radbroadcast.use:
+    description: 允许使用 /rad 广播
+    default: op

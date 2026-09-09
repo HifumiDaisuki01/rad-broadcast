@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "radbroadcast",
+  "version": "${version}",
+  "name": "RadBroadcast Client",
+  "description": "空间站搜打撤沉浸广播客户端：接收 RadBroadcast 服务端指令，立即播放音频直链（MP3，独立于游戏声音通道）。",
+  "authors": ["KeranTechnology"],
+  "license": "MIT",
+  "environment": "client",
+  "entrypoints": {
+    "client": ["com.keran.radbroadcast.client.RadBroadcastClient"]
+  },
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": "~1.20.1",
+    "fabric-api": ">=0.92.0",
+    "java": ">=17"
+  }
+}
