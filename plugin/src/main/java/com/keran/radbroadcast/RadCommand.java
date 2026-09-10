@@ -10,6 +10,12 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.managers.RegionManager;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +49,14 @@ public class RadCommand implements CommandExecutor, TabCompleter {
 			return true;
 		}
 		try {
+			// ---- WorldGuard 区域播放：/rad wgplay <区域名> <音频直链>
+			if (rest[0].equalsIgnoreCase("wgplay")) {
+				if (rest.length < 3) {
+					sender.sendMessage("§c用法: /rad wgplay <WorldGuard区域名> <音频直链>");
+					return true;
+				}
+				return playWorldGuardRegion(sender, rest[1], join(rest, 2));
+			}
 			// ---- 区域播放：前 3 个参数为数字 => /rad play x y z world range url
 			if (isDouble(rest[0]) && isDouble(rest[1]) && isDouble(rest[2])) {
 				if (rest.length < 6) {
@@ -75,6 +89,37 @@ public class RadCommand implements CommandExecutor, TabCompleter {
 			sender.sendMessage("§c执行出错: " + e.getMessage());
 			return true;
 		}
+	}
+
+	/** WorldGuard 区域播放：检查每名玩家所在世界中的同名区域（软依赖） */
+	private boolean playWorldGuardRegion(CommandSender sender, String regionName, String url) {
+		if (Bukkit.getPluginManager().getPlugin("WorldGuard") == null) {
+			sender.sendMessage("§c未安装 WorldGuard，无法使用区域播放");
+			return true;
+		}
+		List<Player> targets = new ArrayList<>();
+		String id = regionName.toLowerCase(Locale.ROOT);
+		try {
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				RegionManager rm = WorldGuard.getInstance().getPlatform().getRegionContainer()
+						.get(BukkitAdapter.adapt(p.getWorld()));
+				if (rm == null) continue;
+				ProtectedRegion region = rm.getRegion(id);
+				if (region == null) continue;
+				Location l = p.getLocation();
+				if (region.contains(BlockVector3.at(l.getBlockX(), l.getBlockY(), l.getBlockZ()))) {
+					targets.add(p);
+				}
+			}
+		} catch (Throwable t) {
+			sender.sendMessage("§cWorldGuard 区域查询失败: " + t.getMessage());
+			return true;
+		}
+		if (targets.isEmpty()) {
+			sender.sendMessage("§7没有玩家位于区域 §f" + regionName + " §7内（或该区域不存在）");
+			return true;
+		}
+		return playPlayers(sender, targets, url);
 	}
 
 	private boolean playRegion(CommandSender sender, Location center, double range, String url) {
@@ -194,6 +239,10 @@ public class RadCommand implements CommandExecutor, TabCompleter {
 			list.add("@p");
 			list.add("@r");
 			for (Player p : Bukkit.getOnlinePlayers()) list.add(p.getName());
+		}
+		if (args.length == 1) {
+			list.add("play");
+			list.add("wgplay");
 		}
 		return list;
 	}

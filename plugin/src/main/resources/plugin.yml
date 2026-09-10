@@ -8,10 +8,11 @@ description: 音频广播插件：按区域/指定玩家/全员向装有配套�
 softdepend:
   - PlaceholderAPI
   - Multiverse-Core
+  - WorldGuard
 commands:
   rad:
     description: "广播音频 (需对应 Fabric 客户端 Mod: radbroadcast)"
-    usage: /rad play <x> <y> <z> <世界> <范围> <音频直链> | /rad play <玩家|all> <音频直链>
+    usage: /rad play <x> <y> <z> <世界> <范围> <音频直链> | /rad play <玩家|all> <音频直链> | /rad wgplay <WG区域名> <音频直链>
     permission: radbroadcast.use
 permissions:
   radbroadcast.use:

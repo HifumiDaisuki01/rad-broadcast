@@ -16,7 +16,7 @@
 ## 安装
 
 1. **服务端**（Paper 1.20.1）：`RadBroadcast-1.0.0.jar` 放进 `plugins/`，重启。
-   - 可选：PlaceholderAPI（支持 `%占位符%`）、Multiverse-Core（支持世界别名）——不装也能用。
+   - 可选：PlaceholderAPI（支持 `%占位符%`）、Multiverse-Core（支持世界别名）、WorldGuard（支持按区域广播）——不装也能用。
 2. **客户端**：每位需要听到广播的玩家，在 1.20.1 Fabric 环境（Fabric Loader 0.15+、Fabric API 0.92+、Java 17+）装
    `radbroadcast-client-1201-1.0.0.jar`。没装 Mod 的玩家自动忽略，不影响服务器。
 3. 需要 **OP**（或 `radbroadcast.use` 权限）才能执行 `/rad`。
@@ -27,6 +27,7 @@
 /rad play <x> <y> <z> <世界> <范围> <音频直链>       向世界内该点指定范围的玩家广播
 /rad play <玩家|UUID|@a|@p|@r> <音频直链>           指定玩家播放（可 PAPI 占位符）
 /rad play all <音频直链>                             全体在线玩家播放
+/rad wgplay <WorldGuard区域名> <音频直链>            对位于该 WG 区域内的玩家广播
 ```
 
 示例：
@@ -40,6 +41,23 @@
 > 占位符说明：装了 PlaceholderAPI 后自动展开。由**玩家**执行命令时以该玩家为上下文
 > （`%player_name%` 就是他自己）；由**控制台/MM 执行**时取第一位在线玩家为上下文，
 > 因此推荐让命令带真实目标（见下）。
+
+## WorldGuard 区域广播
+
+```
+/rad wgplay <区域名> <音频直链>
+```
+
+对**当前位于该 WorldGuard 区域内的玩家**广播。特性：
+
+- 区域名大小写不敏感（内部按 WorldGuard 规范转小写查询）
+- 同名区域存在于多个世界时，按玩家各自所在世界判定，互不影响
+- 未安装 WorldGuard 时命令会提示，其他功能不受影响
+
+示例：
+```
+/rad wgplay alert_zone https://cdn.example.com/alert.mp3
+```
 
 ## MythicMobs 集成（怪物喊话）
 
