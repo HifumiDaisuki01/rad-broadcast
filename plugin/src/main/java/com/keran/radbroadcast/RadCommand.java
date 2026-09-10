@@ -37,9 +37,23 @@ public class RadCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
 							 @NotNull String label, @NotNull String[] args) {
+		// 顶层子命令：wgplay（WorldGuard 区域广播）与 play 同级，必须在 play 守卫之前分流
+		if (args.length >= 1 && args[0].equalsIgnoreCase("wgplay")) {
+			if (args.length < 3) {
+				sender.sendMessage("§c用法: /rad wgplay <WorldGuard区域名> <音频直链>");
+				return true;
+			}
+			try {
+				return playWorldGuardRegion(sender, args[1], join(args, 2));
+			} catch (Exception e) {
+				sender.sendMessage("§c执行出错: " + e.getMessage());
+				return true;
+			}
+		}
 		if (args.length < 1 || !args[0].equalsIgnoreCase("play")) {
 			sender.sendMessage("§c用法: §f/rad play <x> <y> <z> <世界> <范围> <音频直链>");
 			sender.sendMessage("§f/rad play <玩家|@a|@p|@r> <音频直链>   §f/rad play all <音频直链>");
+			sender.sendMessage("§f/rad wgplay <WorldGuard区域名> <音频直链>");
 			return true;
 		}
 		String[] rest = new String[args.length - 1];
@@ -49,14 +63,6 @@ public class RadCommand implements CommandExecutor, TabCompleter {
 			return true;
 		}
 		try {
-			// ---- WorldGuard 区域播放：/rad wgplay <区域名> <音频直链>
-			if (rest[0].equalsIgnoreCase("wgplay")) {
-				if (rest.length < 3) {
-					sender.sendMessage("§c用法: /rad wgplay <WorldGuard区域名> <音频直链>");
-					return true;
-				}
-				return playWorldGuardRegion(sender, rest[1], join(rest, 2));
-			}
 			// ---- 区域播放：前 3 个参数为数字 => /rad play x y z world range url
 			if (isDouble(rest[0]) && isDouble(rest[1]) && isDouble(rest[2])) {
 				if (rest.length < 6) {

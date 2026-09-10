@@ -4,3 +4,4 @@ build/
 *.iml
 .vscode/
 .DS_Store
+*.jar
