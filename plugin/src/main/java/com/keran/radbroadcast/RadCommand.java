@@ -38,13 +38,20 @@ public class RadCommand implements CommandExecutor, TabCompleter {
 	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
 							 @NotNull String label, @NotNull String[] args) {
 		// 顶层子命令：wgplay（WorldGuard 区域广播）与 play 同级，必须在 play 守卫之前分流
+		// 注意：Bukkit 按空格切分参数，链接不能含空格；含空格会被切碎拼成错误 URL，
+		// 这里检测到多余参数时直接提示，避免静默拼错后播放诡异的 404。
 		if (args.length >= 1 && args[0].equalsIgnoreCase("wgplay")) {
 			if (args.length < 3) {
 				sender.sendMessage("§c用法: /rad wgplay <WorldGuard区域名> <音频直链>");
 				return true;
 			}
+			if (args.length > 3) {
+				sender.sendMessage("§c音频直链中疑似含空格（Minecraft 命令无法保留空格）。");
+				sender.sendMessage("§7请先做 URL 编码（空格写成 %20），或改用不含空格的直链。");
+				return true;
+			}
 			try {
-				return playWorldGuardRegion(sender, args[1], join(args, 2));
+				return playWorldGuardRegion(sender, args[1], args[2]);
 			} catch (Exception e) {
 				sender.sendMessage("§c执行出错: " + e.getMessage());
 				return true;
@@ -69,6 +76,11 @@ public class RadCommand implements CommandExecutor, TabCompleter {
 					sender.sendMessage("§c区域播放需要: x y z 世界 范围 音频直链");
 					return true;
 				}
+				if (rest.length > 6) {
+					sender.sendMessage("§c音频直链中疑似含空格（Minecraft 命令无法保留空格）。");
+					sender.sendMessage("§7请先做 URL 编码（空格写成 %20），或改用不含空格的直链。");
+					return true;
+				}
 				double x = parseDouble(rest[0]);
 				double y = parseDouble(rest[1]);
 				double z = parseDouble(rest[2]);
@@ -84,11 +96,21 @@ public class RadCommand implements CommandExecutor, TabCompleter {
 			}
 			// ---- all：全体玩家
 			if (rest[0].equalsIgnoreCase("all")) {
+				if (rest.length > 2) {
+					sender.sendMessage("§c音频直链中疑似含空格（Minecraft 命令无法保留空格）。");
+					sender.sendMessage("§7请先做 URL 编码（空格写成 %20），或改用不含空格的直链。");
+					return true;
+				}
 				String url = join(rest, 1);
 				return playPlayers(sender, new ArrayList<>(Bukkit.getOnlinePlayers()), url);
 			}
 			// ---- 指定玩家
 			String target = rest[0];
+			if (rest.length > 2) {
+				sender.sendMessage("§c音频直链中疑似含空格（Minecraft 命令无法保留空格）。");
+				sender.sendMessage("§7请先做 URL 编码（空格写成 %20），或改用不含空格的直链。");
+				return true;
+			}
 			String url = join(rest, 1);
 			return playTarget(sender, target, url);
 		} catch (Exception e) {
