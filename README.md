@@ -4,6 +4,11 @@
 用于怪物喊话、警报、环境音等。纯客户端解码播放，**不占用 MC 声音通道**，
 可与游戏内其他音效/音乐叠加。
 
+[![Minecraft](https://img.shields.io/badge/Minecraft-%s-green.svg)](https://papermc.io)
+[![Paper](https://img.shields.io/badge/Paper-%s-blue.svg)](https://papermc.io)
+[![Java](https://img.shields.io/badge/Java-%s-orange.svg)](https://adoptium.net)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 ## 组件
 
 | 端 | 文件 | 说明 |
